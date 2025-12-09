@@ -3,25 +3,30 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "lab-runner",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
   "forwardPorts": [
     8888,
     27017
   ],
+
   "hostRequirements": {
     "cpus": 4
   },
+
   "containerEnv": {
     "PROXY_ENDPOINT": "https://vtqjvgchmwcjwsrela2oyhlegu0hwqnw.lambda-url.us-west-2.on.aws/",
     "MONGODB_URI": "mongodb://admin:mongodb@mongodb:27017/"
   },
 
-  // NEW: run postCreate as root so we can use apt-get
-  "containerUser": "root",
+  /* ✅ Dev Container Feature installs git as root */
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
 
-  // NO sudo here, runs as root during postCreate
-  "postCreateCommand": "apt-get update && apt-get install -y git && pip install -r requirements.txt",
+  /* ✅ Only Python deps at creation time */
+  "postCreateCommand": "pip install -r requirements.txt",
 
-  // After setup, VS Code attaches as jovyan (like before)
+  /* ✅ Stay non-root for dev work */
   "remoteUser": "jovyan",
 
   "customizations": {
